@@ -5,7 +5,6 @@ F = nn.functional
 Embedding = nn.Embedding
 Linear = nn.Linear
 LayerNorm = nn.LayerNorm
-DEVICE = torch.device('mps')
 
 class Bert(nn.Module):
   def __init__(self, hidden_size, intermediate_size, max_position_embeddings, num_attention_heads, num_hidden_layers, vocab_size, attention_probs_dropout_prob, hidden_dropout_prob):
@@ -46,7 +45,7 @@ class BertEmbeddings(nn.Module):
 class BertEncoder(nn.Module):
   def __init__(self, hidden_size, intermediate_size, num_attention_heads, num_hidden_layers, attention_probs_dropout_prob, hidden_dropout_prob):
     super().__init__()
-    self.layer = [BertLayer(hidden_size, intermediate_size, num_attention_heads, attention_probs_dropout_prob, hidden_dropout_prob).to(DEVICE) for _ in range(num_hidden_layers)]
+    self.layer = nn.ModuleList([BertLayer(hidden_size, intermediate_size, num_attention_heads, attention_probs_dropout_prob, hidden_dropout_prob) for _ in range(num_hidden_layers)])
 
   def forward(self, hidden_states, attention_mask):
     for layer in self.layer:
